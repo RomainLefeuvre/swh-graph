@@ -6,7 +6,7 @@
 
   <groupId>org.softwareheritage.graph</groupId>
   <artifactId>swh-graph</artifactId>
-  <version>${git.closest.tag.name}</version>
+  <version>1.0.2-SNAPSHOT</version>
 
   <name>swh-graph</name>
   <url>https://forge.softwareheritage.org/source/swh-graph/</url>
