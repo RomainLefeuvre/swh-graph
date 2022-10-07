@@ -7,6 +7,8 @@
 
 package org.softwareheritage.graph;
 
+
+import it.unimi.dsi.big.util.MappedFrontCodedStringBigList;
 import it.unimi.dsi.bits.LongArrayBitVector;
 import it.unimi.dsi.fastutil.bytes.ByteBigList;
 import it.unimi.dsi.fastutil.bytes.ByteMappedBigList;
@@ -21,7 +23,6 @@ import it.unimi.dsi.sux4j.util.EliasFanoLongBigList;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.softwareheritage.graph.maps.NodeIdMap;
 import org.softwareheritage.graph.maps.NodeTypesMap;
-import org.softwareheritage.graph.patch.MappedFrontCodedStringBigList;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
