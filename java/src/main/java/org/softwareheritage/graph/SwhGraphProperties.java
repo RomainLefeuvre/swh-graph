@@ -26,6 +26,7 @@ import org.softwareheritage.graph.maps.NodeTypesMap;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
 import java.util.Base64;
 
 /**
@@ -49,18 +50,18 @@ public class SwhGraphProperties {
 
     private final NodeIdMap nodeIdMap;
     private final NodeTypesMap nodeTypesMap;
-    private LongBigList authorTimestamp;
-    private ShortBigList authorTimestampOffset;
-    private LongBigList committerTimestamp;
-    private ShortBigList committerTimestampOffset;
-    private LongBigList contentLength;
+    private LongMappedBigList authorTimestamp;
+    private ShortMappedBigList authorTimestampOffset;
+    private LongMappedBigList committerTimestamp;
+    private ShortMappedBigList committerTimestampOffset;
+    private LongMappedBigList contentLength;
     private LongArrayBitVector contentIsSkipped;
-    private IntBigList authorId;
-    private IntBigList committerId;
-    private ByteBigList messageBuffer;
-    private LongBigList messageOffsets;
-    private ByteBigList tagNameBuffer;
-    private LongBigList tagNameOffsets;
+    private IntMappedBigList authorId;
+    private IntMappedBigList committerId;
+    private ByteMappedBigList messageBuffer;
+    private LongMappedBigList messageOffsets;
+    private ByteMappedBigList tagNameBuffer;
+    private LongMappedBigList tagNameOffsets;
     private MappedFrontCodedStringBigList edgeLabelNames;
 
     protected SwhGraphProperties(String path, NodeIdMap nodeIdMap, NodeTypesMap nodeTypesMap) {
@@ -118,25 +119,25 @@ public class SwhGraphProperties {
         return nodeTypesMap.getType(nodeId);
     }
 
-    private static LongBigList loadMappedLongs(String path) throws IOException {
+    private static LongMappedBigList loadMappedLongs(String path) throws IOException {
         try (RandomAccessFile raf = new RandomAccessFile(path, "r")) {
             return LongMappedBigList.map(raf.getChannel());
         }
     }
 
-    private static IntBigList loadMappedInts(String path) throws IOException {
+    private static IntMappedBigList loadMappedInts(String path) throws IOException {
         try (RandomAccessFile raf = new RandomAccessFile(path, "r")) {
             return IntMappedBigList.map(raf.getChannel());
         }
     }
 
-    private static ShortBigList loadMappedShorts(String path) throws IOException {
+    private static ShortMappedBigList loadMappedShorts(String path) throws IOException {
         try (RandomAccessFile raf = new RandomAccessFile(path, "r")) {
             return ShortMappedBigList.map(raf.getChannel());
         }
     }
 
-    private static ByteBigList loadMappedBytes(String path) throws IOException {
+    private static ByteMappedBigList loadMappedBytes(String path) throws IOException {
         try (RandomAccessFile raf = new RandomAccessFile(path, "r")) {
             return ByteMappedBigList.map(raf.getChannel());
         }
@@ -329,20 +330,48 @@ public class SwhGraphProperties {
         return Base64.getDecoder().decode(edgeLabelNames.getArray(labelId));
     }
 
+    /**
+     * Returns a lightweight duplicate that can be read independently by another thread.
+     *
+     * @return a lightweight duplicate that can be read independently by another thread.
+     */
     public SwhGraphProperties copy() {
         SwhGraphProperties copy = new SwhGraphProperties(this.path, this.nodeIdMap, this.nodeTypesMap);
-        copy.authorTimestamp = this.authorTimestamp;
-        copy.authorTimestampOffset = this.authorTimestampOffset;
-        copy.committerTimestamp = this.committerTimestamp;
-        copy.committerTimestampOffset = this.committerTimestampOffset;
-        copy.contentLength = this.contentLength;
         copy.contentIsSkipped = this.contentIsSkipped;
-        copy.authorId = this.authorId;
-        copy.committerId = this.committerId;
-        copy.messageBuffer = this.messageBuffer;
-        copy.messageOffsets = this.messageOffsets;
-        copy.tagNameBuffer = this.tagNameBuffer;
-        copy.tagNameOffsets = this.tagNameOffsets;
+
+        if (this.authorTimestamp != null)
+            copy.authorTimestamp = this.authorTimestamp.copy();
+
+        if (this.authorTimestampOffset != null)
+            copy.authorTimestampOffset = this.authorTimestampOffset.copy();
+
+        if (this.committerTimestamp != null)
+            copy.committerTimestamp = this.committerTimestamp.copy();
+
+        if (this.committerTimestampOffset != null)
+            copy.committerTimestampOffset = this.committerTimestampOffset.copy();
+
+        if (this.contentLength != null)
+            copy.contentLength = this.contentLength.copy();
+
+        if (this.authorId != null)
+            copy.authorId = this.authorId.copy();
+
+        if (this.committerId != null)
+            copy.committerId = this.committerId.copy();
+
+        if (this.messageBuffer != null)
+            copy.messageBuffer = this.messageBuffer.copy();
+
+        if (this.messageOffsets != null)
+            copy.messageOffsets = this.messageOffsets.copy();
+
+        if (this.tagNameBuffer != null)
+            copy.tagNameBuffer = this.tagNameBuffer.copy();
+
+        if (this.tagNameOffsets != null)
+            copy.tagNameOffsets = this.tagNameOffsets.copy();
+
         if (this.edgeLabelNames != null)
             copy.edgeLabelNames = this.edgeLabelNames.copy();
         return copy;
