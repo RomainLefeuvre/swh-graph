@@ -6,7 +6,7 @@
 
   <groupId>org.softwareheritage.graph</groupId>
   <artifactId>swh-graph</artifactId>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.0.3-SNAPSHOT</version>
 
   <name>swh-graph</name>
   <url>https://forge.softwareheritage.org/source/swh-graph/</url>
@@ -59,7 +59,7 @@
     <dependency>
         <groupId>it.unimi.dsi</groupId>
         <artifactId>sux4j</artifactId>
-        <version>5.3.1</version>
+        <version>5.4.0</version>
     </dependency>
     <dependency>
       <groupId>it.unimi.dsi</groupId>
